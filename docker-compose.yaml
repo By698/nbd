@@ -2,7 +2,8 @@ version: "3"
 
 
 services:
-  java-rest-api:
+#DC1
+  java-rest-api-dc1:
     container_name: java-rest-api
     build: .
     ports:
@@ -13,25 +14,46 @@ services:
       - "REPLICATION_FACTOR=2"
     restart: on-failure
 
-  cassandra-seed:
-    container_name: cassandra-seed
+
+  cassandra-seed-dc1:
+    container_name: cassandra-seed-dc1
     image: cassandra:latest
     ports:
       - "9043:9043"
     environment:
-      - "CASSANDRA_SEEDS=cassandra-seed"
+      - "CASSANDRA_SEEDS=cassandra-seed-dc1"
       - "CASSANDRA_CLUSTER_NAME=global_terrorism_database"
       - "CASSANDRA_DC=datacenter1"
       - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
+    healthcheck:
+      test: ps ax | grep cassandra
+      interval: 30
+      stimeout: 10
+      sretries: 5
+    networks:
+      - dc-1
 
-  cassandra1:
-    container_name: cassandra_node1
+
+  cassandra-node-dc1:
+    container_name: cassandra-node-dc1
     image: cassandra:latest
     command: /bin/bash -c "echo 'Waiting for seed node' && sleep 30 && /docker-entrypoint.sh cassandra -f"
     environment:
-      - "CASSANDRA_SEEDS=cassandra-seed"
+      - "CASSANDRA_SEEDS=cassandra-seed-dc1"
       - "CASSANDRA_CLUSTER_NAME=global_terrorism_database"
       - "CASSANDRA_DC=datacenter1"
       - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
     depends_on:
-      - "cassandra-seed"
+      cassandra-seed-dc1:
+        condition: service_healthy
+    healthcheck:
+      test: ps ax | grep cassandra
+      interval: 30
+      stimeout: 10
+      sretries: 5
+    networks:
+      - dc-1
+
+networks:
+  dc-1:
+    driver: bridge
