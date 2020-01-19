@@ -27,9 +27,9 @@ services:
       - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
     healthcheck:
       test: ps ax | grep cassandra
-      interval: 30
-      stimeout: 10
-      sretries: 5
+      interval: 30s
+      timeout: 10
+      retries: 5
     networks:
       - dc-1
 
@@ -48,12 +48,14 @@ services:
         condition: service_healthy
     healthcheck:
       test: ps ax | grep cassandra
-      interval: 30
-      stimeout: 10
-      sretries: 5
+      interval: 30s
+      timeout: 10
+      retries: 5
     networks:
       - dc-1
 
 networks:
-  dc-1:
+  datacenter_1:
     driver: bridge
+  # datacenter_2:
+  #   driver: bridge
