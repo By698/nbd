@@ -23,7 +23,7 @@ services:
     environment:
       - "CASSANDRA_SEEDS=cassandra-seed-dc1"
       - "CASSANDRA_CLUSTER_NAME=global_terrorism_database"
-      - "CASSANDRA_DC=datacenter1"
+      - "CASSANDRA_DC=dc1"
       - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
     healthcheck:
       test: ps ax | grep cassandra
@@ -41,7 +41,7 @@ services:
     environment:
       - "CASSANDRA_SEEDS=cassandra-seed-dc1"
       - "CASSANDRA_CLUSTER_NAME=global_terrorism_database"
-      - "CASSANDRA_DC=datacenter1"
+      - "CASSANDRA_DC=dc1"
       - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
     depends_on:
       - cassandra-seed-dc1
@@ -51,10 +51,10 @@ services:
       timeout: 10s
       retries: 5
     networks:
-      - dc-1
+      - dc1
 
 networks:
-  datacenter_1:
+  dc1:
     driver: bridge
   # datacenter_2:
   #   driver: bridge
