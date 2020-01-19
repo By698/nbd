@@ -28,7 +28,7 @@ services:
     healthcheck:
       test: ps ax | grep cassandra
       interval: 30s
-      timeout: 10
+      timeout: 10s
       retries: 5
     networks:
       - dc-1
@@ -44,12 +44,11 @@ services:
       - "CASSANDRA_DC=datacenter1"
       - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
     depends_on:
-      cassandra-seed-dc1:
-        condition: service_healthy
+      - cassandra-seed-dc1
     healthcheck:
       test: ps ax | grep cassandra
       interval: 30s
-      timeout: 10
+      timeout: 10s
       retries: 5
     networks:
       - dc-1
