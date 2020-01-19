@@ -9,7 +9,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - "cassandra1"
+      - "cassandra-node-dc1"
     environment:
       - "REPLICATION_FACTOR=2"
     restart: on-failure
